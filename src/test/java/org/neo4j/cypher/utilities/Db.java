@@ -1,4 +1,4 @@
-package org.neo4j.cypherpatterns.utilities;
+package org.neo4j.cypher.utilities;
 
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;

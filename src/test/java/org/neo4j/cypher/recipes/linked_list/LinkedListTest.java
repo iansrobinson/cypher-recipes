@@ -1,4 +1,4 @@
-package org.neo4j.cypherpatterns.linked_list;
+package org.neo4j.cypher.recipes.linked_list;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import org.neo4j.cypher.javacompat.ExecutionEngine;
 import org.neo4j.cypher.javacompat.ExecutionResult;
-import org.neo4j.cypherpatterns.utilities.Db;
+import org.neo4j.cypher.utilities.Db;
 import org.neo4j.graphdb.GraphDatabaseService;
 
 import static org.junit.Assert.assertTrue;

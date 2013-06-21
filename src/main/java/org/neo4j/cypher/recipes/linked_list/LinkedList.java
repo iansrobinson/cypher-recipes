@@ -1,4 +1,4 @@
-package org.neo4j.cypherpatterns.linked_list;
+package org.neo4j.cypher.recipes.linked_list;
 
 import java.util.HashMap;
 import java.util.Map;
