@@ -16,15 +16,15 @@ public class ShortestWeightedPath
         this.executionEngine = executionEngine;
     }
 
-    public Iterator<Map<String,Object>> findShortestPath(String start, String end)
+    public Iterator<Map<String, Object>> findShortestPath( String start, String end )
     {
-        String cypher = "START startNode=node:node_auto_index(name={startNode}),\n" +
-                "      endNode=node:node_auto_index(name={endNode})\n" +
-                "MATCH p=(startNode)-[:CONNECTED_TO*1..4]->(endNode)\n" +
-                "WITH  p, reduce(weight=0, r in relationships(p) : weight+r.weight) AS totalWeight\n" +
-                "      ORDER BY totalWeight ASC\n" +
-                "      LIMIT 1\n" +
-                "RETURN p AS shortestPath, totalWeight";
+        String cypher = "START  startNode=node:node_auto_index(name={startNode}),\n" +
+                "       endNode=node:node_auto_index(name={endNode})\n" +
+                "MATCH  p=(startNode)-[rel:CONNECTED_TO*1..4]->(endNode)\n" +
+                "RETURN p AS shortestPath,\n" +
+                "       reduce(weight=0, r in rel : weight+r.weight) AS totalWeight\n" +
+                "       ORDER BY totalWeight ASC\n" +
+                "       LIMIT 1";
 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put( "startNode", start );
@@ -34,5 +34,4 @@ public class ShortestWeightedPath
 
         return result.iterator();
     }
-
 }

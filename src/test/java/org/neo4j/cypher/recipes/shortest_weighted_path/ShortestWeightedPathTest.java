@@ -41,14 +41,14 @@ public class ShortestWeightedPathTest
         ShortestWeightedPath shortestWeightedPath = new ShortestWeightedPath( executionEngine );
 
         // when
-        Iterator<Map<String,Object>> results = shortestWeightedPath.findShortestPath( "A", "I" );
+        Iterator<Map<String, Object>> results = shortestWeightedPath.findShortestPath( "A", "I" );
 
         // then
         Map<String, Object> result = results.next();
 
-        assertEquals(8L, result.get( "totalWeight" ));
+        assertEquals( 8L, result.get( "totalWeight" ) );
 
-        assertFalse(results.hasNext());
+        assertFalse( results.hasNext() );
     }
 
     private void populateDb()
