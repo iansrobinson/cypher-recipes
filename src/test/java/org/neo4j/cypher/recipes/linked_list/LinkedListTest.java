@@ -7,25 +7,21 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.neo4j.cypher.javacompat.ExecutionEngine;
 import org.neo4j.cypher.javacompat.ExecutionResult;
-import org.neo4j.cypher.utilities.Db;
-import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.cypher.utilities.DatabaseFixture;
 
 import static org.junit.Assert.assertTrue;
 
 public class LinkedListTest
 {
-    private GraphDatabaseService db;
-    private ExecutionEngine executionEngine;
+    private DatabaseFixture db;
+    private LinkedList list;
 
     @Before
     public void setup()
     {
-        db = Db.impermanentDatabase();
-        executionEngine = new ExecutionEngine( db );
-
-        populateDb( );
+        db = new DatabaseFixture( "CREATE (list{name:'my-list'})" );
+        list = new LinkedList( db.graphDatabaseService() );
     }
 
     @After
@@ -37,9 +33,6 @@ public class LinkedListTest
     @Test
     public void shouldAddNewElementToHeadOfList() throws Exception
     {
-        // given
-        LinkedList list = new LinkedList( db );
-
         // when
         list.addElement( "my-list", newElement( "a" ) );
         list.addElement( "my-list", newElement( "b" ) );
@@ -51,7 +44,7 @@ public class LinkedListTest
                 "WHERE c.value = 'c' AND b.value = 'b' AND a.value = 'a'\n" +
                 "RETURN p";
 
-        ExecutionResult result = executionEngine.execute( cypher );
+        ExecutionResult result = db.execute( cypher );
         assertTrue( result.iterator().hasNext() );
     }
 
@@ -60,11 +53,5 @@ public class LinkedListTest
         Map<String, Object> map = new HashMap<String, Object>();
         map.put( "value", value );
         return map;
-    }
-
-    private void populateDb( )
-    {
-        String cypher = "CREATE (list{name:'my-list'})";
-        executionEngine.execute( cypher );
     }
 }

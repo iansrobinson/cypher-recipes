@@ -6,14 +6,15 @@ import java.util.Map;
 
 import org.neo4j.cypher.javacompat.ExecutionEngine;
 import org.neo4j.cypher.javacompat.ExecutionResult;
+import org.neo4j.graphdb.GraphDatabaseService;
 
 public class ShortestWeightedPath
 {
     private final ExecutionEngine executionEngine;
 
-    public ShortestWeightedPath( ExecutionEngine executionEngine )
+    public ShortestWeightedPath( GraphDatabaseService db )
     {
-        this.executionEngine = executionEngine;
+        this.executionEngine = new ExecutionEngine( db );
     }
 
     public Iterator<Map<String, Object>> findShortestPath( String start, String end )
