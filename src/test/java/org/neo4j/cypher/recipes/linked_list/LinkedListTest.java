@@ -14,20 +14,20 @@ import static org.junit.Assert.assertTrue;
 
 public class LinkedListTest
 {
-    private DatabaseFixture db;
+    private DatabaseFixture dbFixture;
     private LinkedList list;
 
     @Before
     public void setup()
     {
-        db = new DatabaseFixture( "CREATE (list{name:'my-list'})" );
-        list = new LinkedList( db.graphDatabaseService() );
+        dbFixture = new DatabaseFixture( "CREATE (list{name:'my-list'})" );
+        list = new LinkedList( dbFixture.graphDatabaseService() );
     }
 
     @After
     public void teardown()
     {
-        db.shutdown();
+        dbFixture.shutdown();
     }
 
     @Test
@@ -44,7 +44,7 @@ public class LinkedListTest
                 "WHERE c.value = 'c' AND b.value = 'b' AND a.value = 'a'\n" +
                 "RETURN p";
 
-        ExecutionResult result = db.execute( cypher );
+        ExecutionResult result = dbFixture.execute( cypher );
         assertTrue( result.iterator().hasNext() );
     }
 

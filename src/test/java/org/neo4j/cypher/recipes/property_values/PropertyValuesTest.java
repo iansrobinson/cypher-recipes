@@ -15,7 +15,7 @@ import static org.junit.Assert.assertFalse;
 
 public class PropertyValuesTest
 {
-    private DatabaseFixture db;
+    private DatabaseFixture dbFixture;
     private PropertyValues propertyValues;
 
     @Before
@@ -48,14 +48,14 @@ public class PropertyValuesTest
                 "       (larden)-[:WROTE]->(rfish),\n" +
                 "       (larden)-[:WROTE]->(rup4j)";
 
-        db = new DatabaseFixture( cypher );
-        propertyValues = new PropertyValues( db.graphDatabaseService() );
+        dbFixture = new DatabaseFixture( cypher );
+        propertyValues = new PropertyValues( dbFixture.graphDatabaseService() );
     }
 
     @After
     public void teardown()
     {
-        db.shutdown();
+        dbFixture.shutdown();
     }
 
     @Test

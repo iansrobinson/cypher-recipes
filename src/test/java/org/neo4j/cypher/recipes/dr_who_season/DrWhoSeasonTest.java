@@ -16,20 +16,20 @@ import static org.junit.Assert.assertFalse;
 
 public class DrWhoSeasonTest
 {
-    private DatabaseFixture db;
+    private DatabaseFixture dbFixture;
     private DrWhoSeason season;
 
     @Before
     public void setup()
     {
-        db = new DatabaseFixture( "CREATE (season:Season{season:12})" );
-        season = new DrWhoSeason( db.graphDatabaseService() );
+        dbFixture = new DatabaseFixture( "CREATE (season:Season{season:12})" );
+        season = new DrWhoSeason( dbFixture.graphDatabaseService() );
     }
 
     @After
     public void teardown()
     {
-        db.shutdown();
+        dbFixture.shutdown();
     }
 
     @Test
@@ -42,7 +42,7 @@ public class DrWhoSeasonTest
         String cypher = "MATCH p=(season:Season)-[:FIRST]->(story:Story)<-[:LAST]-(season)\n" +
                 "WHERE season.season=12 AND story.title='Robot'\n" +
                 "RETURN COUNT(p) AS result";
-        ExecutionResult result = db.execute( cypher );
+        ExecutionResult result = dbFixture.execute( cypher );
         assertEquals( 1L, result.iterator().next().get( "result" ) );
     }
 
@@ -57,14 +57,14 @@ public class DrWhoSeasonTest
         String cypher = "MATCH (season:Season)-[:FIRST]->(story)\n" +
                 "WHERE season.season=12 \n" +
                 "RETURN story.title AS story";
-        ResourceIterator<Map<String, Object>> result = db.execute( cypher ).iterator();
+        ResourceIterator<Map<String, Object>> result = dbFixture.execute( cypher ).iterator();
         assertEquals( "Robot", result.next().get( "story" ) );
         assertFalse( result.hasNext() );
 
         cypher = "MATCH (season:Season)-[:LAST]->(story)\n" +
                 "WHERE season.season=12 \n" +
                 "RETURN story.title AS story";
-        result = db.execute( cypher ).iterator();
+        result = dbFixture.execute( cypher ).iterator();
         assertEquals( "Ark in Space", result.next().get( "story" ) );
         assertFalse( result.hasNext() );
     }

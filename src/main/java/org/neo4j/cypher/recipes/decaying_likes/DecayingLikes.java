@@ -18,7 +18,7 @@ public class DecayingLikes
 
     public ResourceIterator<Map<String, Object>> getScoreForSite( String site, long currentMillis, long intervalMillis )
     {
-        String cypher = "MATCH (:Person)-[c:COOLIO]->(site:Site)\n" +
+        String cypher = "MATCH (:Person)-[c:LIKES]->(site:Site)\n" +
                 "WHERE site.name = {site}\n" +
                 "RETURN REDUCE(score = 0, rel IN COLLECT(c) | score +\n" +
                 "       (CASE ({currentMillis}-rel.datetime)/{intervalMillis}\n" +

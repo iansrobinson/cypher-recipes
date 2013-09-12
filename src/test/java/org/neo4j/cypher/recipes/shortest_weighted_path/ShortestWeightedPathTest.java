@@ -14,7 +14,7 @@ import static org.junit.Assert.assertFalse;
 
 public class ShortestWeightedPathTest
 {
-    private DatabaseFixture db;
+    private DatabaseFixture dbFixture;
     private ShortestWeightedPath shortestWeightedPath;
 
     @Before
@@ -35,14 +35,14 @@ public class ShortestWeightedPathTest
                 "(a)-[:CONNECTED_TO{weight:2}]->(f)-[:CONNECTED_TO{weight:3}]->(g)-[:CONNECTED_TO{weight:2}]->(h)\n" +
                 "-[:CONNECTED_TO{weight:1}]->(i)";
 
-        db = new DatabaseFixture( cypher );
-        shortestWeightedPath = new ShortestWeightedPath( db.graphDatabaseService() );
+        dbFixture = new DatabaseFixture( cypher );
+        shortestWeightedPath = new ShortestWeightedPath( dbFixture.graphDatabaseService() );
     }
 
     @After
     public void teardown()
     {
-        db.shutdown();
+        dbFixture.shutdown();
     }
 
     @Test

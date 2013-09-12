@@ -14,7 +14,7 @@ import static org.junit.Assert.assertFalse;
 
 public class ValueNodesTest
 {
-    private DatabaseFixture db;
+    private DatabaseFixture dbFixture;
     ValueNodes valueNodes;
 
 
@@ -40,14 +40,14 @@ public class ValueNodesTest
                         "       (lucy)-[:HAS_SKILL{level:'advanced'}]->(java),\n" +
                         "       (lucy)-[:HAS_SKILL{level:'expert'}]->(neo4j)";
 
-        db = new DatabaseFixture( cypher );
-        valueNodes = new ValueNodes( db.graphDatabaseService() );
+        dbFixture = new DatabaseFixture( cypher );
+        valueNodes = new ValueNodes( dbFixture.graphDatabaseService() );
     }
 
     @After
     public void teardown()
     {
-        db.shutdown();
+        dbFixture.shutdown();
     }
 
     @Test

@@ -14,7 +14,7 @@ import static org.junit.Assert.assertFalse;
 
 public class EmploymentEventsTest
 {
-    private DatabaseFixture db;
+    private DatabaseFixture dbFixture;
     private EmploymentEvents employmentEvents;
 
     @Before
@@ -45,14 +45,14 @@ public class EmploymentEventsTest
                       "(alice)-[:EMPLOYMENT]->(e5)-[:ROLE]->(qa),\n" +
                       "(e5)-[:COMPANY]->(acme)";
 
-        db = new DatabaseFixture( cypher );
-        employmentEvents = new EmploymentEvents( db.graphDatabaseService() );
+        dbFixture = new DatabaseFixture( cypher );
+        employmentEvents = new EmploymentEvents( dbFixture.graphDatabaseService() );
     }
 
     @After
     public void teardown()
     {
-        db.shutdown();
+        dbFixture.shutdown();
     }
 
 

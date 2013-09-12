@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 
 public class DecayingLikesTest
 {
-    private DatabaseFixture db;
+    private DatabaseFixture dbFixture;
     private DecayingLikes decayingLikes;
 
     @Before
@@ -24,19 +24,19 @@ public class DecayingLikesTest
                         "       (lucy:Person {name:'Lucy'}),\n" +
                         "       (sarah:Person {name:'Sarah'}),\n" +
                         "       (odeon:Site {name:'Odeon'}),\n" +
-                        "       (ian)-[:COOLIO{datetime:1378422000000, v:1}]->(odeon),\n" +
-                        "       (bill)-[:COOLIO{datetime:1374879600000, v:1}]->(odeon),\n" +
-                        "       (lucy)-[:COOLIO{datetime:1369609200000, v:1}]->(odeon),\n" +
-                        "       (sarah)-[:COOLIO{datetime:1374879600000, v:-1}]->(odeon)";
+                        "       (ian)-[:LIKES{datetime:1378422000000, v:1}]->(odeon),\n" +
+                        "       (bill)-[:LIKES{datetime:1374879600000, v:1}]->(odeon),\n" +
+                        "       (lucy)-[:LIKES{datetime:1369609200000, v:1}]->(odeon),\n" +
+                        "       (sarah)-[:LIKES{datetime:1374879600000, v:-1}]->(odeon)";
 
-        db = new DatabaseFixture( cypher );
-        decayingLikes = new DecayingLikes( db.graphDatabaseService() );
+        dbFixture = new DatabaseFixture( cypher );
+        decayingLikes = new DecayingLikes( dbFixture.graphDatabaseService() );
     }
 
     @After
     public void teardown()
     {
-        db.shutdown();
+        dbFixture.shutdown();
     }
 
     @Test

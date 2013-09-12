@@ -10,23 +10,23 @@ import org.neo4j.test.TestGraphDatabaseFactory;
 
 public class DatabaseFixture
 {
-    private final GraphDatabaseService db;
+    private final GraphDatabaseService dbFixture;
     private final ExecutionEngine executionEngine;
 
     public DatabaseFixture( String initialContents )
     {
-        db = new TestGraphDatabaseFactory()
+        dbFixture = new TestGraphDatabaseFactory()
                 .newImpermanentDatabaseBuilder().
                         setConfig( GraphDatabaseSettings.node_keys_indexable, "name" ).
                         setConfig( GraphDatabaseSettings.node_auto_indexing, "true" )
                 .newGraphDatabase();
-        executionEngine = new ExecutionEngine( db );
+        executionEngine = new ExecutionEngine( dbFixture );
         execute( initialContents );
     }
 
     public GraphDatabaseService graphDatabaseService()
     {
-        return db;
+        return dbFixture;
     }
 
     public ExecutionEngine executionEngine()
@@ -46,6 +46,6 @@ public class DatabaseFixture
 
     public void shutdown()
     {
-        db.shutdown();
+        dbFixture.shutdown();
     }
 }
