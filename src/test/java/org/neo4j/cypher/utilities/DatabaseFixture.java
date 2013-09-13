@@ -21,7 +21,13 @@ public class DatabaseFixture
                         setConfig( GraphDatabaseSettings.node_auto_indexing, "true" )
                 .newGraphDatabase();
         executionEngine = new ExecutionEngine( dbFixture );
+        execute(deleteNode0());
         execute( initialContents );
+    }
+
+    private String deleteNode0()
+    {
+        return "START n=node(0) DELETE n";
     }
 
     public GraphDatabaseService graphDatabaseService()
