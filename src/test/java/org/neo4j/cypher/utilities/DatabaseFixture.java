@@ -21,11 +21,11 @@ public class DatabaseFixture
                         setConfig( GraphDatabaseSettings.node_auto_indexing, "true" )
                 .newGraphDatabase();
         executionEngine = new ExecutionEngine( dbFixture );
-        execute(deleteNode0());
+        execute( deleteReferenceNode() );
         execute( initialContents );
     }
 
-    private String deleteNode0()
+    private String deleteReferenceNode()
     {
         return "START n=node(0) DELETE n";
     }
@@ -48,6 +48,27 @@ public class DatabaseFixture
     public ExecutionResult execute( String cypher, Map<String, Object> params )
     {
         return executionEngine.execute( cypher );
+    }
+
+    public long labelledNodesWithProperty( String label, String property )
+    {
+        ExecutionResult result = execute(
+                "MATCH n:" + label + " WHERE has(n." + property + ") RETURN count(n) AS totalNodes" );
+        return (long) result.iterator().next().get( "totalNodes" );
+    }
+
+    public long totalNodeCount()
+    {
+        ExecutionResult result = execute(
+                "MATCH n RETURN count(n) AS totalNodes" );
+        return (long) result.iterator().next().get( "totalNodes" );
+    }
+
+    public long relCount( String relName )
+    {
+        ExecutionResult result = execute(
+                "MATCH ()-[r:" + relName + "]->() RETURN count(r) AS relCount" );
+        return (long) result.iterator().next().get( "relCount" );
     }
 
     public void shutdown()

@@ -1,22 +1,17 @@
-package org.neo4j.cypher.recipes.property_values;
-
-import java.util.Map;
+package org.neo4j.cypher.recipes.extract_node_from_array_property;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import org.neo4j.cypher.utilities.DatabaseFixture;
-import org.neo4j.graphdb.ResourceIterator;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
-public class PropertyValuesTest
+public class ExtractNodeFromArrayPropertyTest
 {
     private DatabaseFixture dbFixture;
-    private PropertyValues propertyValues;
+    private ExtractNodeFromArrayProperty extractNodeFromArrayProperty;
 
     @Before
     public void setup()
@@ -50,7 +45,7 @@ public class PropertyValuesTest
                 "       (trbaker)-[:CONTRIBUTED_TO]->(autopop)";
 
         dbFixture = new DatabaseFixture( cypher );
-        propertyValues = new PropertyValues( dbFixture.graphDatabaseService() );
+        extractNodeFromArrayProperty = new ExtractNodeFromArrayProperty( dbFixture.executionEngine() );
     }
 
     @After
@@ -60,29 +55,22 @@ public class PropertyValuesTest
     }
 
     @Test
-    public void shouldFindProjectsWithSimilarLanguages() throws Exception
+    public void shouldConvertEachElementInArrayToUniqueNode() throws Exception
     {
+        // given
+        assertEquals( 14L, dbFixture.totalNodeCount() );
+
         // when
-        ResourceIterator<Map<String, Object>> results =
-                propertyValues.findProjectsWithSimilarLanguagesFor( "dsfiggs" );
+        extractNodeFromArrayProperty.apply();
 
         // then
-        Map<String, Object> result = results.next();
-        assertEquals( "larden", result.get( "username" ) );
-        assertEquals( "boint", result.get( "project" ) );
-        assertArrayEquals( new String[]{"ruby"}, (Object[]) result.get( "languages" ) );
+        assertEquals( 20L, dbFixture.totalNodeCount() );
+        assertEquals( 6L, dbFixture.labelledNodesWithProperty( "Language", "value" ) );
+        assertEquals( 10L, dbFixture.relCount( "LANGUAGE" ) );
 
-        result = results.next();
-        assertEquals( "larden", result.get( "username" ) );
-        assertEquals( "rfish", result.get( "project" ) );
-        assertArrayEquals( new String[]{"ruby"}, (Object[]) result.get( "languages" ) );
-
-        result = results.next();
-        assertEquals( "hjones", result.get( "username" ) );
-        assertEquals( "polyphony", result.get( "project" ) );
-        assertArrayEquals( new String[]{"java", "scala"}, (Object[]) result.get( "languages" ) );
-
-        assertFalse( results.hasNext() );
-
+        assertEquals( 0L, dbFixture.labelledNodesWithProperty( "Temp", "refactoringId" ) );
+        assertEquals( 0L, dbFixture.labelledNodesWithProperty( "Project", "language" ) );
+        assertEquals( 0L, dbFixture.relCount( "TEMP" ) );
     }
+
 }

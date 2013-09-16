@@ -4,7 +4,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.neo4j.cypher.javacompat.ExecutionResult;
 import org.neo4j.cypher.utilities.DatabaseFixture;
 
 import static org.junit.Assert.assertEquals;
@@ -39,41 +38,20 @@ public class ExtractNodeFromRelationshipTest
     public void shouldCreateNewNodeAndRelsForEachEmailedRel() throws Exception
     {
         // given
-        assertEquals( 5L, totalNodeCount() );
-        assertEquals( 8L, relCount( "EMAILED" ) );
-        assertEquals( 0L, relCount( "SENT" ) );
-        assertEquals( 0L, relCount( "TO" ) );
+        assertEquals( 5L, dbFixture.totalNodeCount() );
+        assertEquals( 8L, dbFixture.relCount( "EMAILED" ) );
+        assertEquals( 0L, dbFixture.relCount( "SENT" ) );
+        assertEquals( 0L, dbFixture.relCount( "TO" ) );
 
         // when
-        extractNodeFromRelationship.extractNodes();
+        extractNodeFromRelationship.apply();
 
         // then
-        assertEquals( 13L, totalNodeCount() );
-        assertEquals( 8L, relCount( "SENT" ) );
-        assertEquals( 8L, relCount( "TO" ) );
-        assertEquals( 0L, relCount( "EMAILED" ) );
-        assertEquals( 0L, labelledNodesWithProperty( "Email", "_rid" ) );
-    }
-
-    private long labelledNodesWithProperty( String label, String property )
-    {
-        ExecutionResult result = dbFixture.executionEngine().execute(
-                "MATCH n:" + label + " WHERE has(n." + property + ") RETURN count(n) AS totalNodes" );
-        return (long) result.iterator().next().get( "totalNodes" );
-    }
-
-    private long totalNodeCount()
-    {
-        ExecutionResult result = dbFixture.executionEngine().execute(
-                "MATCH n RETURN count(n) AS totalNodes" );
-        return (long) result.iterator().next().get( "totalNodes" );
-    }
-
-    private long relCount( String relName )
-    {
-        ExecutionResult result = dbFixture.executionEngine().execute(
-                "MATCH ()-[r:" + relName + "]->() RETURN count(r) AS relCount" );
-        return (long) result.iterator().next().get( "relCount" );
+        assertEquals( 13L, dbFixture.totalNodeCount() );
+        assertEquals( 8L, dbFixture.relCount( "SENT" ) );
+        assertEquals( 8L, dbFixture.relCount( "TO" ) );
+        assertEquals( 0L, dbFixture.relCount( "EMAILED" ) );
+        assertEquals( 0L, dbFixture.labelledNodesWithProperty( "Email", "_rid" ) );
     }
 
     @After
