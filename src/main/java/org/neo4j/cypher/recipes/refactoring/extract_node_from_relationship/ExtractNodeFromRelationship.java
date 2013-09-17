@@ -1,12 +1,13 @@
-package org.neo4j.cypher.recipes.extract_node_from_relationship;
+package org.neo4j.cypher.recipes.refactoring.extract_node_from_relationship;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.neo4j.cypher.javacompat.ExecutionEngine;
 import org.neo4j.cypher.javacompat.ExecutionResult;
+import org.neo4j.cypher.recipes.refactoring.Migration;
 
-public class ExtractNodeFromRelationship
+public class ExtractNodeFromRelationship implements Migration
 {
     private static final int BATCH_SIZE = 2;
     private final ExecutionEngine executionEngine;
@@ -18,7 +19,7 @@ public class ExtractNodeFromRelationship
 
     public void apply()
     {
-        Map<String, Object> params = new HashMap<String, Object>(  );
+        Map<String, Object> params = new HashMap<>(  );
         params.put( "batchSize", BATCH_SIZE );
 
         long numberRelsDeleted = extractNodesInBatch(params);

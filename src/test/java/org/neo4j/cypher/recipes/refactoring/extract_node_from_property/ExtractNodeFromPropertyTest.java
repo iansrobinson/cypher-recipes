@@ -1,4 +1,4 @@
-package org.neo4j.cypher.recipes.extract_node_from_property;
+package org.neo4j.cypher.recipes.refactoring.extract_node_from_property;
 
 import org.junit.After;
 import org.junit.Before;
@@ -47,7 +47,7 @@ public class ExtractNodeFromPropertyTest
 
         // then
         assertEquals( 7L, dbFixture.totalNodeCount() );
-        assertEquals( 2L, dbFixture.labelledNodesWithProperty("Currency", "code") );
+        assertEquals( 2L, dbFixture.labelledNodesWithProperty( "Currency", "code" ) );
         assertEquals( 0L, dbFixture.labelledNodesWithProperty("Trade", "currency") );
     }
 }

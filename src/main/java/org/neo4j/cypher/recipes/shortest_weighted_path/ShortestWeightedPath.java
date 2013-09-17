@@ -23,11 +23,11 @@ public class ShortestWeightedPath
                 "       endNode=node:node_auto_index(name={endNode})\n" +
                 "MATCH  p=(startNode)-[rel:CONNECTED_TO*1..4]->(endNode)\n" +
                 "RETURN p AS shortestPath,\n" +
-                "       reduce(weight=0, r in rel : weight+r.weight) AS totalWeight\n" +
+                "       reduce(weight=0, r in rel | weight+r.weight) AS totalWeight\n" +
                 "       ORDER BY totalWeight ASC\n" +
                 "       LIMIT 1";
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put( "startNode", start );
         params.put( "endNode", end );
 

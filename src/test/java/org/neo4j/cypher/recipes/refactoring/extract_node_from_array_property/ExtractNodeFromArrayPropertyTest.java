@@ -1,4 +1,4 @@
-package org.neo4j.cypher.recipes.extract_node_from_array_property;
+package org.neo4j.cypher.recipes.refactoring.extract_node_from_array_property;
 
 import org.junit.After;
 import org.junit.Before;

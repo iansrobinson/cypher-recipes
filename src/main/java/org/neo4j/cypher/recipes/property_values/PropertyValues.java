@@ -23,13 +23,14 @@ public class PropertyValues
                 "      (contributor:User)-[:CONTRIBUTED_TO]->(project),\n" +
                 "      (contributor:User)-[:WROTE]->(otherProject:Project)\n" +
                 "WHERE user.username = {username} \n" +
-                "      AND ANY (language IN otherProject.language \n" +
-                "               WHERE language IN project.language)\n" +
+                "      AND ANY (otherLanguage IN otherProject.language \n" +
+                "        WHERE ANY (language IN project.language \n" +
+                "          WHERE language = otherLanguage))\n" +
                 "RETURN contributor.username AS username,\n" +
                 "       otherProject.name AS project,\n" +
                 "       otherProject.language AS languages";
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
                 params.put( "username", username );
 
         ExecutionResult result = executionEngine.execute( cypher, params );

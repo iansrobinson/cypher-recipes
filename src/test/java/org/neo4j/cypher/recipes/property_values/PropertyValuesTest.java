@@ -68,6 +68,11 @@ public class PropertyValuesTest
 
         // then
         Map<String, Object> result = results.next();
+        assertEquals( "hjones", result.get( "username" ) );
+        assertEquals( "polyphony", result.get( "project" ) );
+        assertArrayEquals( new String[]{"java", "scala"}, (Object[]) result.get( "languages" ) );
+
+        result = results.next();
         assertEquals( "larden", result.get( "username" ) );
         assertEquals( "boint", result.get( "project" ) );
         assertArrayEquals( new String[]{"ruby"}, (Object[]) result.get( "languages" ) );
@@ -76,11 +81,6 @@ public class PropertyValuesTest
         assertEquals( "larden", result.get( "username" ) );
         assertEquals( "rfish", result.get( "project" ) );
         assertArrayEquals( new String[]{"ruby"}, (Object[]) result.get( "languages" ) );
-
-        result = results.next();
-        assertEquals( "hjones", result.get( "username" ) );
-        assertEquals( "polyphony", result.get( "project" ) );
-        assertArrayEquals( new String[]{"java", "scala"}, (Object[]) result.get( "languages" ) );
 
         assertFalse( results.hasNext() );
 

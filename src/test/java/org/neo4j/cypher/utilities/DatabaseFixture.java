@@ -53,14 +53,14 @@ public class DatabaseFixture
     public long labelledNodesWithProperty( String label, String property )
     {
         ExecutionResult result = execute(
-                "MATCH n:" + label + " WHERE has(n." + property + ") RETURN count(n) AS totalNodes" );
+                "MATCH (n:" + label + ") WHERE has(n." + property + ") RETURN count(n) AS totalNodes" );
         return (long) result.iterator().next().get( "totalNodes" );
     }
 
     public long totalNodeCount()
     {
         ExecutionResult result = execute(
-                "MATCH n RETURN count(n) AS totalNodes" );
+                "MATCH (n) RETURN count(n) AS totalNodes" );
         return (long) result.iterator().next().get( "totalNodes" );
     }
 

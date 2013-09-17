@@ -1,12 +1,13 @@
-package org.neo4j.cypher.recipes.extract_node_from_array_property;
+package org.neo4j.cypher.recipes.refactoring.extract_node_from_array_property;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 import org.neo4j.cypher.javacompat.ExecutionEngine;
+import org.neo4j.cypher.recipes.refactoring.Migration;
 
-public class ExtractNodeFromArrayProperty
+public class ExtractNodeFromArrayProperty implements Migration
 {
     private static final int BATCH_SIZE = 2;
     private final ExecutionEngine executionEngine;
@@ -21,7 +22,7 @@ public class ExtractNodeFromArrayProperty
         String refactoringId = UUID.randomUUID().toString();
 
         System.out.println(refactoringId);
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put( "refactoringId", refactoringId );
         params.put( "batchSize", BATCH_SIZE );
 

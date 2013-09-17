@@ -24,7 +24,7 @@ public class DrWhoSeason
 
                 "// Determine whether first story already exists\n" +
                 "WITH season, newStory, \n" +
-                "     CASE WHEN (season)-[:FIRST]->() THEN [] ELSE [1]\n" +
+                "     CASE WHEN NOT ((season)-[:FIRST]->()) THEN [1] ELSE []\n" +
                 "     END \n" +
                 "  AS firstExists" +
 
@@ -37,7 +37,7 @@ public class DrWhoSeason
                 "DELETE oldRel\n" +
                 "CREATE (oldLast)-[:NEXT]->(newStory)";
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put( "seasonNumber", seasonNumber );
         params.put( "story", story );
 
@@ -49,7 +49,7 @@ public class DrWhoSeason
         String cypher = "MATCH (season:Season)-[:FIRST]->(firstStory)-[:NEXT*0..]->(nextStory)\n" +
                 "RETURN nextStory.title AS nextStory";
 
-                Map<String, Object> params = new HashMap<String, Object>();
+                Map<String, Object> params = new HashMap<>();
                 params.put( "seasonNumber", seasonNumber );
 
                 return executionEngine.execute( cypher, params ).iterator();
@@ -60,7 +60,7 @@ public class DrWhoSeason
            String cypher = "MATCH (season:Season)-[:LAST]->(lastStory)\n" +
                    "RETURN lastStory.title AS lastStory";
 
-                   Map<String, Object> params = new HashMap<String, Object>();
+                   Map<String, Object> params = new HashMap<>();
                    params.put( "seasonNumber", seasonNumber );
 
                    return executionEngine.execute( cypher, params ).iterator();
