@@ -13,6 +13,11 @@ public class DatabaseFixture
     private final GraphDatabaseService dbFixture;
     private final ExecutionEngine executionEngine;
 
+    public DatabaseFixture()
+    {
+        this( null );
+    }
+
     public DatabaseFixture( String initialContents )
     {
         dbFixture = new TestGraphDatabaseFactory()
@@ -22,7 +27,10 @@ public class DatabaseFixture
                 .newGraphDatabase();
         executionEngine = new ExecutionEngine( dbFixture );
         execute( deleteReferenceNode() );
-        execute( initialContents );
+        if ( initialContents != null )
+        {
+            execute( initialContents );
+        }
     }
 
     private String deleteReferenceNode()
@@ -47,7 +55,7 @@ public class DatabaseFixture
 
     public ExecutionResult execute( String cypher, Map<String, Object> params )
     {
-        return executionEngine.execute( cypher );
+        return executionEngine.execute( cypher, params );
     }
 
     public long labelledNodesWithProperty( String label, String property )
