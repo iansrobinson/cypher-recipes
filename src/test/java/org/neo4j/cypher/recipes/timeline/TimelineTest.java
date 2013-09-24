@@ -43,7 +43,7 @@ public class TimelineTest
         newNode.put( "name", "my-new-node" );
 
         // when
-        timeline.addNewNode( "my-timeline", newNode, new LocalDate( 2007, 1, 14 ) );
+        timeline.addNewNode( "my-timeline", newNode, new LocalDate( 2007, 1, 14 ).toDateTimeAtStartOfDay() );
 
         // then
         String cypher = "MATCH (t:Timeline)-[:YEAR]->(y)-[:MONTH]->(m)-[:DAY]->(d)-[:EVENT]->(n)\n" +
@@ -82,18 +82,20 @@ public class TimelineTest
         Map<String, Object> node6 = new HashMap<>();
         node6.put( "name", "node6" );
 
-        timeline.addNewNode( "my-timeline", node1, new LocalDate( 2007, 1, 14 ) );
-        timeline.addNewNode( "my-timeline", node2, new LocalDate( 2007, 1, 24 ) );
-        timeline.addNewNode( "my-timeline", node3, new LocalDate( 2007, 2, 1 ) );
-        timeline.addNewNode( "my-timeline", node4, new LocalDate( 2008, 1, 1 ) );
-        timeline.addNewNode( "my-timeline", node5, new LocalDate( 2008, 1, 14 ) );
-        timeline.addNewNode( "my-timeline", node6, new LocalDate( 2008, 1, 28 ) );
+        timeline.addNewNode( "my-timeline", node1, new LocalDate( 2007, 1, 14 ).toDateTimeAtStartOfDay() );
+        timeline.addNewNode( "my-timeline", node2, new LocalDate( 2007, 1, 24 ).toDateTimeAtStartOfDay()  );
+        timeline.addNewNode( "my-timeline", node3, new LocalDate( 2007, 2, 1 ).toDateTimeAtStartOfDay()  );
+        timeline.addNewNode( "my-timeline", node4, new LocalDate( 2008, 1, 1 ).toDateTimeAtStartOfDay()  );
+        timeline.addNewNode( "my-timeline", node5, new LocalDate( 2008, 1, 14 ).toDateTimeAtStartOfDay()  );
+        timeline.addNewNode( "my-timeline", node6, new LocalDate( 2008, 1, 28 ).toDateTimeAtStartOfDay()  );
 
         // when
         try (Transaction tx = dbFixture.graphDatabaseService().beginTx())
         {
             ResourceIterator<Map<String, Object>> results = timeline.findAllEventsBetween(
-                    new LocalDate( 2007, 1, 24 ), new LocalDate( 2008, 1, 14 ), "my-timeline" );
+                    new LocalDate( 2007, 1, 24 ).toDateTimeAtStartOfDay() ,
+                    new LocalDate( 2008, 1, 14 ).toDateTimeAtStartOfDay() ,
+                    "my-timeline" );
 
             // then
             assertEquals( "node2", ((Node) results.next().get( "n" )).getProperty( "name" ) );
