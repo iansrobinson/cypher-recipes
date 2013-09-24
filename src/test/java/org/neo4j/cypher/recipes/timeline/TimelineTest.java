@@ -62,17 +62,6 @@ public class TimelineTest
     }
 
     @Test
-    public void dates() throws Exception
-    {
-        // given
-        System.out.println(new LocalDate( 2013,1, 15 ).toDateTimeAtStartOfDay().getMillis());
-
-        // when
-
-        // then
-    }
-
-    @Test
     public void shouldGetNodesOnTimelineBetweenTwoDatesStartDateInclusive() throws Exception
     {
         Map<String, Object> node1 = new HashMap<>();
