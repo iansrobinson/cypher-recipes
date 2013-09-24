@@ -24,7 +24,7 @@ public class Timeline
                 "CREATE UNIQUE (timeline)-[:YEAR]->(year{value:{year}})\n" +
                 "  -[:MONTH]->(month{value:{month}})\n" +
                 "  -[:DAY]->(day{value:{day}, millis:{millis}})\n" +
-                "  -[:EVENT]->(n{newNode})";
+                "  <-[:OCCURRED]-(n{newNode})";
 
         Map<String, Object> params = new HashMap<>();
         params.put( "timelineName", timelineName );
@@ -40,7 +40,7 @@ public class Timeline
     public ResourceIterator<Map<String, Object>> findAllEventsBetween(
             DateTime startDate, DateTime endDate, String timelineName )
     {
-        String cypher = "MATCH (timeline:Timeline)-[:YEAR]->(year)-[:MONTH]->(month)-[:DAY]->(day)-[:EVENT]->(n)\n" +
+        String cypher = "MATCH (timeline:Timeline)-[:YEAR]->(year)-[:MONTH]->(month)-[:DAY]->(day)<-[:OCCURRED]-(n)\n" +
                 "WHERE timeline.name = {timelineName}\n" +
                 "AND day.millis >= {startMillis} AND day.millis < {endMillis}\n" +
                 "RETURN n";

@@ -46,7 +46,7 @@ public class TimelineTest
         timeline.addNewNode( "my-timeline", newNode, new LocalDate( 2007, 1, 14 ).toDateTimeAtStartOfDay() );
 
         // then
-        String cypher = "MATCH (t:Timeline)-[:YEAR]->(y)-[:MONTH]->(m)-[:DAY]->(d)-[:EVENT]->(n)\n" +
+        String cypher = "MATCH (t:Timeline)-[:YEAR]->(y)-[:MONTH]->(m)-[:DAY]->(d)<-[:OCCURRED]-(n)\n" +
                 "WHERE t.name = {timelineName} AND y.value = {year} AND m.value = {month} AND d.value = {day}\n" +
                 "RETURN n.name AS name";
 
@@ -59,6 +59,17 @@ public class TimelineTest
         ExecutionResult results = dbFixture.execute( cypher, params );
 
         assertEquals( "my-new-node", results.iterator().next().get( "name" ) );
+    }
+
+    @Test
+    public void dates() throws Exception
+    {
+        // given
+        System.out.println(new LocalDate( 2013,1, 15 ).toDateTimeAtStartOfDay().getMillis());
+
+        // when
+
+        // then
     }
 
     @Test
