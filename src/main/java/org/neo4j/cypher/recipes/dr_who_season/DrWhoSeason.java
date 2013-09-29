@@ -47,6 +47,7 @@ public class DrWhoSeason
     public ResourceIterator<Map<String, Object>> findBroadcastStories( Long seasonNumber )
     {
         String cypher = "MATCH (season:Season)-[:FIRST]->(firstStory)-[:NEXT*0..]->(nextStory)\n" +
+                "WHERE season.season = {seasonNumber}\n" +
                 "RETURN nextStory.title AS nextStory";
 
                 Map<String, Object> params = new HashMap<>();
@@ -58,6 +59,7 @@ public class DrWhoSeason
     public ResourceIterator<Map<String, Object>> findLastStoryToBeBroadcast( Long seasonNumber )
        {
            String cypher = "MATCH (season:Season)-[:LAST]->(lastStory)\n" +
+                   "WHERE season.season = {seasonNumber}\n" +
                    "RETURN lastStory.title AS lastStory";
 
                    Map<String, Object> params = new HashMap<>();

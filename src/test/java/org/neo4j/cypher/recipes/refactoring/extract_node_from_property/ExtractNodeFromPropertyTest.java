@@ -22,9 +22,12 @@ public class ExtractNodeFromPropertyTest
                 "(t1:Trade{amount:100.00,currency:'GBP'}),\n" +
                 "(t2:Trade{amount:25.00,currency:'USD'}),\n" +
                 "(t3:Trade{amount:325.00,currency:'GBP'}),\n" +
-                "(p1)<-[:BUYER]-(t1)-[:SELLER]->(p2),\n" +
-                "(p1)<-[:BUYER]-(t2)-[:SELLER]->(p2),\n" +
-                "(p2)<-[:BUYER]-(t3)-[:SELLER]->(p1)";
+                "(p1)<-[:BUYER]-(t1),\n" +
+                "(t1)-[:SELLER]->(p2),\n" +
+                "(p1)<-[:BUYER]-(t2),\n" +
+                "(t2)-[:SELLER]->(p2),\n" +
+                "(p2)<-[:BUYER]-(t3),\n" +
+                "(t3)-[:SELLER]->(p1)";
 
         dbFixture = new DatabaseFixture( cypher );
         extractNodeFromProperty = new ExtractNodeFromProperty(dbFixture.executionEngine());
