@@ -25,7 +25,10 @@ public class TimelineTest
     @Before
     public void setup()
     {
-        dbFixture = new DatabaseFixture();
+        dbFixture = DatabaseFixture
+                .createDatabase()
+                .empty()
+                .noMigrations();
         timeline = new Timeline( dbFixture.executionEngine() );
     }
 
@@ -83,18 +86,18 @@ public class TimelineTest
         node6.put( "name", "node6" );
 
         timeline.addNewNode( "my-timeline", node1, new LocalDate( 2007, 1, 14 ).toDateTimeAtStartOfDay() );
-        timeline.addNewNode( "my-timeline", node2, new LocalDate( 2007, 1, 24 ).toDateTimeAtStartOfDay()  );
-        timeline.addNewNode( "my-timeline", node3, new LocalDate( 2007, 2, 1 ).toDateTimeAtStartOfDay()  );
-        timeline.addNewNode( "my-timeline", node4, new LocalDate( 2008, 1, 1 ).toDateTimeAtStartOfDay()  );
-        timeline.addNewNode( "my-timeline", node5, new LocalDate( 2008, 1, 14 ).toDateTimeAtStartOfDay()  );
-        timeline.addNewNode( "my-timeline", node6, new LocalDate( 2008, 1, 28 ).toDateTimeAtStartOfDay()  );
+        timeline.addNewNode( "my-timeline", node2, new LocalDate( 2007, 1, 24 ).toDateTimeAtStartOfDay() );
+        timeline.addNewNode( "my-timeline", node3, new LocalDate( 2007, 2, 1 ).toDateTimeAtStartOfDay() );
+        timeline.addNewNode( "my-timeline", node4, new LocalDate( 2008, 1, 1 ).toDateTimeAtStartOfDay() );
+        timeline.addNewNode( "my-timeline", node5, new LocalDate( 2008, 1, 14 ).toDateTimeAtStartOfDay() );
+        timeline.addNewNode( "my-timeline", node6, new LocalDate( 2008, 1, 28 ).toDateTimeAtStartOfDay() );
 
         // when
-        try (Transaction tx = dbFixture.graphDatabaseService().beginTx())
+        try ( Transaction tx = dbFixture.database().beginTx() )
         {
             ResourceIterator<Map<String, Object>> results = timeline.findAllEventsBetween(
-                    new LocalDate( 2007, 1, 24 ).toDateTimeAtStartOfDay() ,
-                    new LocalDate( 2008, 1, 14 ).toDateTimeAtStartOfDay() ,
+                    new LocalDate( 2007, 1, 24 ).toDateTimeAtStartOfDay(),
+                    new LocalDate( 2008, 1, 14 ).toDateTimeAtStartOfDay(),
                     "my-timeline" );
 
             // then

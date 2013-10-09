@@ -26,8 +26,11 @@ public class SpecificRelationshipsTest
                 "       (peter)-[:HOME_ADDRESS]->(a1),\n" +
                 "       (peter)-[:WORK_ADDRESS]->(a2)";
 
-        dbFixture = new DatabaseFixture( cypher );
-        specificRelationships = new SpecificRelationships( dbFixture.graphDatabaseService() );
+        dbFixture = DatabaseFixture
+                .createDatabase()
+                .populateWith( cypher )
+                .noMigrations();
+        specificRelationships = new SpecificRelationships( dbFixture.database() );
     }
 
     @After

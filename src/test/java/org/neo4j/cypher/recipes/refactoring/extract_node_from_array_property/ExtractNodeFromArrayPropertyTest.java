@@ -44,8 +44,11 @@ public class ExtractNodeFromArrayPropertyTest
                 "       (larden)-[:WROTE]->(rup4j),\n" +
                 "       (trbaker)-[:CONTRIBUTED_TO]->(autopop)";
 
-        dbFixture = new DatabaseFixture( cypher );
-        extractNodeFromArrayProperty = new ExtractNodeFromArrayProperty( dbFixture.executionEngine() );
+        dbFixture = DatabaseFixture
+                .createDatabase()
+                .populateWith( cypher )
+                .noMigrations();
+        extractNodeFromArrayProperty = new ExtractNodeFromArrayProperty();
     }
 
     @After
@@ -61,7 +64,7 @@ public class ExtractNodeFromArrayPropertyTest
         assertEquals( 14L, dbFixture.totalNodeCount() );
 
         // when
-        extractNodeFromArrayProperty.apply();
+        extractNodeFromArrayProperty.apply( dbFixture.database() );
 
         // then
         assertEquals( 20L, dbFixture.totalNodeCount() );

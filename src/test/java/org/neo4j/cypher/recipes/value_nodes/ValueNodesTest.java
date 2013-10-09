@@ -40,8 +40,11 @@ public class ValueNodesTest
                         "       (lucy)-[:HAS_SKILL{level:'advanced'}]->(java),\n" +
                         "       (lucy)-[:HAS_SKILL{level:'expert'}]->(neo4j)";
 
-        dbFixture = new DatabaseFixture( cypher );
-        valueNodes = new ValueNodes( dbFixture.graphDatabaseService() );
+        dbFixture = DatabaseFixture
+                        .createDatabase()
+                        .populateWith( cypher )
+                        .noMigrations();
+        valueNodes = new ValueNodes( dbFixture.database() );
     }
 
     @After

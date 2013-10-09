@@ -20,8 +20,11 @@ public class LinkedListTest
     @Before
     public void setup()
     {
-        dbFixture = new DatabaseFixture( "CREATE (list{name:'my-list'})" );
-        list = new LinkedList( dbFixture.graphDatabaseService() );
+        dbFixture = DatabaseFixture
+                .createDatabase()
+                .populateWith( "CREATE (list{name:'my-list'})" )
+                .noMigrations();
+        list = new LinkedList( dbFixture.database() );
     }
 
     @After
@@ -50,7 +53,7 @@ public class LinkedListTest
 
     private Map<String, Object> newElement( String value )
     {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put( "value", value );
         return map;
     }

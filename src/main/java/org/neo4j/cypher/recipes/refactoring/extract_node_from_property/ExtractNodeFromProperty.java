@@ -4,31 +4,29 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.neo4j.cypher.javacompat.ExecutionEngine;
-import org.neo4j.cypher.recipes.refactoring.Migration;
+import org.neo4j.cypher.utilities.Migration;
+import org.neo4j.graphdb.GraphDatabaseService;
 
 public class ExtractNodeFromProperty implements Migration
 {
     private static final int BATCH_SIZE = 2;
-    private final ExecutionEngine executionEngine;
 
-    public ExtractNodeFromProperty( ExecutionEngine executionEngine )
+    @Override
+    public void apply( GraphDatabaseService db )
     {
-        this.executionEngine = executionEngine;
-    }
+        ExecutionEngine executionEngine = new ExecutionEngine( db );
 
-    public void apply()
-    {
         Map<String, Object> params = new HashMap<>();
         params.put( "batchSize", BATCH_SIZE );
 
-        long numberPropertiesRemoved =  extractPropertiesInBatch(params);
-        while (numberPropertiesRemoved > 0)
+        long numberPropertiesRemoved = extractPropertiesInBatch( executionEngine, params );
+        while ( numberPropertiesRemoved > 0 )
         {
-            numberPropertiesRemoved =  extractPropertiesInBatch(params);
+            numberPropertiesRemoved = extractPropertiesInBatch( executionEngine, params );
         }
     }
 
-    private long extractPropertiesInBatch(Map<String, Object> params)
+    private long extractPropertiesInBatch( ExecutionEngine executionEngine, Map<String, Object> params )
     {
         String cypher = "MATCH (t:Trade) WHERE has(t.currency)\n" +
                 "WITH t LIMIT {batchSize}\n" +

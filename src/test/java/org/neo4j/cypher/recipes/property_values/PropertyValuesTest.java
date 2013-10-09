@@ -49,8 +49,11 @@ public class PropertyValuesTest
                 "       (larden)-[:WROTE]->(rup4j),\n" +
                 "       (trbaker)-[:CONTRIBUTED_TO]->(autopop)";
 
-        dbFixture = new DatabaseFixture( cypher );
-        propertyValues = new PropertyValues( dbFixture.graphDatabaseService() );
+        dbFixture = DatabaseFixture
+                .createDatabase()
+                .populateWith( cypher )
+                .noMigrations();
+        propertyValues = new PropertyValues( dbFixture.database() );
     }
 
     @After

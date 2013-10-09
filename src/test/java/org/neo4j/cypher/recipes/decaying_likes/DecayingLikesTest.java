@@ -20,17 +20,20 @@ public class DecayingLikesTest
     public void setup()
     {
         String cypher = "CREATE (ian:Person {name:'Ian'}),\n" +
-                        "       (bill:Person {name:'Bill'}),\n" +
-                        "       (lucy:Person {name:'Lucy'}),\n" +
-                        "       (sarah:Person {name:'Sarah'}),\n" +
-                        "       (odeon:Site {name:'Odeon'}),\n" +
-                        "       (ian)-[:LIKES{datetime:1378422000000, v:1}]->(odeon),\n" +
-                        "       (bill)-[:LIKES{datetime:1374879600000, v:1}]->(odeon),\n" +
-                        "       (lucy)-[:LIKES{datetime:1369609200000, v:1}]->(odeon),\n" +
-                        "       (sarah)-[:LIKES{datetime:1374879600000, v:-1}]->(odeon)";
+                "       (bill:Person {name:'Bill'}),\n" +
+                "       (lucy:Person {name:'Lucy'}),\n" +
+                "       (sarah:Person {name:'Sarah'}),\n" +
+                "       (odeon:Site {name:'Odeon'}),\n" +
+                "       (ian)-[:LIKES{datetime:1378422000000, v:1}]->(odeon),\n" +
+                "       (bill)-[:LIKES{datetime:1374879600000, v:1}]->(odeon),\n" +
+                "       (lucy)-[:LIKES{datetime:1369609200000, v:1}]->(odeon),\n" +
+                "       (sarah)-[:LIKES{datetime:1374879600000, v:-1}]->(odeon)";
 
-        dbFixture = new DatabaseFixture( cypher );
-        decayingLikes = new DecayingLikes( dbFixture.graphDatabaseService() );
+        dbFixture = DatabaseFixture
+                .createDatabase()
+                .populateWith( cypher )
+                .noMigrations();
+        decayingLikes = new DecayingLikes( dbFixture.database() );
     }
 
     @After

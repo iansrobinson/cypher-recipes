@@ -26,8 +26,11 @@ public class GeneralRelationshipsTest
                 "       (peter)-[:ADDRESS{type:'home'}]->(a1),\n" +
                 "       (peter)-[:ADDRESS{type:'work'}]->(a2)";
 
-        dbFixture = new DatabaseFixture( cypher );
-        generalRelationships = new GeneralRelationships( dbFixture.graphDatabaseService() );
+        dbFixture = DatabaseFixture
+                .createDatabase()
+                .populateWith( cypher )
+                .noMigrations();
+        generalRelationships = new GeneralRelationships( dbFixture.database() );
     }
 
     @After

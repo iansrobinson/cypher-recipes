@@ -35,8 +35,11 @@ public class ShortestWeightedPathTest
                 "(a)-[:CONNECTED_TO{weight:2}]->(f)-[:CONNECTED_TO{weight:3}]->(g)-[:CONNECTED_TO{weight:2}]->(h)\n" +
                 "-[:CONNECTED_TO{weight:1}]->(i)";
 
-        dbFixture = new DatabaseFixture( cypher );
-        shortestWeightedPath = new ShortestWeightedPath( dbFixture.graphDatabaseService() );
+        dbFixture = DatabaseFixture
+                .createDatabase()
+                .populateWith( cypher )
+                .noMigrations();
+        shortestWeightedPath = new ShortestWeightedPath( dbFixture.database() );
     }
 
     @After

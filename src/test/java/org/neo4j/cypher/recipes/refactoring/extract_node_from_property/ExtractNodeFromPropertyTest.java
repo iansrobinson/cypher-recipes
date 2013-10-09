@@ -29,8 +29,11 @@ public class ExtractNodeFromPropertyTest
                 "(p2)<-[:BUYER]-(t3),\n" +
                 "(t3)-[:SELLER]->(p1)";
 
-        dbFixture = new DatabaseFixture( cypher );
-        extractNodeFromProperty = new ExtractNodeFromProperty(dbFixture.executionEngine());
+        dbFixture = DatabaseFixture
+                .createDatabase()
+                .populateWith( cypher )
+                .noMigrations();
+        extractNodeFromProperty = new ExtractNodeFromProperty();
     }
 
     @After
@@ -43,14 +46,14 @@ public class ExtractNodeFromPropertyTest
     public void shouldConvertPropertiesToNodes() throws Exception
     {
         // given
-        assertEquals(5L, dbFixture.totalNodeCount());
+        assertEquals( 5L, dbFixture.totalNodeCount() );
 
         // when
-        extractNodeFromProperty.apply();
+        extractNodeFromProperty.apply( dbFixture.database() );
 
         // then
         assertEquals( 7L, dbFixture.totalNodeCount() );
         assertEquals( 2L, dbFixture.labelledNodesWithProperty( "Currency", "code" ) );
-        assertEquals( 0L, dbFixture.labelledNodesWithProperty("Trade", "currency") );
+        assertEquals( 0L, dbFixture.labelledNodesWithProperty( "Trade", "currency" ) );
     }
 }

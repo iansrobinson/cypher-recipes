@@ -30,8 +30,11 @@ public class ExtractNodeFromRelationshipTest
                 "       (ben)-[:EMAILED{content:'Email 7'}]->(bill),\n" +
                 "       (ben)-[:EMAILED{content:'Email 8'}]->(lucy)";
 
-        dbFixture = new DatabaseFixture( cypher );
-        extractNodeFromRelationship = new ExtractNodeFromRelationship( dbFixture.executionEngine() );
+        dbFixture = DatabaseFixture
+                .createDatabase()
+                .populateWith( cypher )
+                .noMigrations();
+        extractNodeFromRelationship = new ExtractNodeFromRelationship();
     }
 
     @Test
@@ -44,7 +47,7 @@ public class ExtractNodeFromRelationshipTest
         assertEquals( 0L, dbFixture.relCount( "TO" ) );
 
         // when
-        extractNodeFromRelationship.apply();
+        extractNodeFromRelationship.apply( dbFixture.database() );
 
         // then
         assertEquals( 13L, dbFixture.totalNodeCount() );

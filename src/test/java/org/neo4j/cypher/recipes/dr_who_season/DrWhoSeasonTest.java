@@ -22,8 +22,11 @@ public class DrWhoSeasonTest
     @Before
     public void setup()
     {
-        dbFixture = new DatabaseFixture( "CREATE (season:Season{season:12})" );
-        season = new DrWhoSeason( dbFixture.graphDatabaseService() );
+        dbFixture = DatabaseFixture
+                .createDatabase()
+                .populateWith( "CREATE (season:Season{season:12})" )
+                .noMigrations();
+        season = new DrWhoSeason( dbFixture.database() );
     }
 
     @After
@@ -105,7 +108,7 @@ public class DrWhoSeasonTest
 
     private Map<String, Object> newStory( String title )
     {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put( "title", title );
         return map;
     }

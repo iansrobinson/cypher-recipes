@@ -1,46 +1,49 @@
 package org.neo4j.cypher.utilities;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.neo4j.cypher.javacompat.ExecutionEngine;
 import org.neo4j.cypher.javacompat.ExecutionResult;
 import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.test.TestGraphDatabaseFactory;
 
 public class DatabaseFixture
 {
-    private final GraphDatabaseService dbFixture;
+    public static DatabaseFixtureBuilder createDatabase()
+    {
+        Map<String, String> config = new HashMap<>();
+        config.put( "node_auto_indexing", "true" );
+        config.put( "node_keys_indexable", "name" );
+
+        return new DatabaseFixtureBuilder( new TestGraphDatabaseFactory()
+                .newImpermanentDatabaseBuilder()
+                .setConfig( config )
+                .newGraphDatabase() );
+    }
+
+    public static DatabaseFixtureBuilder useExistingDatabase( GraphDatabaseService db )
+    {
+        return new DatabaseFixtureBuilder( db );
+    }
+
+    private final GraphDatabaseService db;
     private final ExecutionEngine executionEngine;
 
-    public DatabaseFixture()
+    private DatabaseFixture( GraphDatabaseService db, String initialContents, Iterable<Migration> migrations )
     {
-        this( null );
+        this.db = db;
+        this.executionEngine = new ExecutionEngine( db );
+
+        deleteReferenceNode();
+        populateWith( initialContents );
+        applyMigrations( migrations );
     }
 
-    public DatabaseFixture( String initialContents )
+    public GraphDatabaseService database()
     {
-        dbFixture = new TestGraphDatabaseFactory()
-                .newImpermanentDatabaseBuilder().
-                        setConfig( GraphDatabaseSettings.node_keys_indexable, "name" ).
-                        setConfig( GraphDatabaseSettings.node_auto_indexing, "true" )
-                .newGraphDatabase();
-        executionEngine = new ExecutionEngine( dbFixture );
-        execute( deleteReferenceNode() );
-        if ( initialContents != null )
-        {
-            execute( initialContents );
-        }
-    }
-
-    private String deleteReferenceNode()
-    {
-        return "START n=node(0) DELETE n";
-    }
-
-    public GraphDatabaseService graphDatabaseService()
-    {
-        return dbFixture;
+        return db;
     }
 
     public ExecutionEngine executionEngine()
@@ -81,6 +84,57 @@ public class DatabaseFixture
 
     public void shutdown()
     {
-        dbFixture.shutdown();
+        db.shutdown();
+    }
+
+    private void deleteReferenceNode()
+    {
+        populateWith( "START n=node(0) DELETE n" );
+    }
+
+    private ExecutionResult populateWith( String cypher )
+    {
+        return execute( cypher );
+    }
+
+    private void applyMigrations( Iterable<Migration> migrations )
+    {
+        for ( Migration migration : migrations )
+        {
+            migration.apply( db );
+        }
+    }
+
+    public static class DatabaseFixtureBuilder
+    {
+        private final GraphDatabaseService db;
+        private String initialContents;
+
+        private DatabaseFixtureBuilder( GraphDatabaseService db )
+        {
+            this.db = db;
+        }
+
+        public DatabaseFixtureBuilder populateWith( String cypher )
+        {
+            initialContents = cypher;
+            return this;
+        }
+
+        public DatabaseFixtureBuilder empty()
+        {
+            initialContents = "MATCH n RETURN n LIMIT 1";
+            return this;
+        }
+
+        public DatabaseFixture applyMigrations( Iterable<Migration> migrations )
+        {
+            return new DatabaseFixture( db, initialContents, migrations );
+        }
+
+        public DatabaseFixture noMigrations()
+        {
+            return new DatabaseFixture( db, initialContents, Collections.<Migration>emptyList() );
+        }
     }
 }

@@ -5,37 +5,35 @@ import java.util.Map;
 
 import org.neo4j.cypher.javacompat.ExecutionEngine;
 import org.neo4j.cypher.javacompat.ExecutionResult;
-import org.neo4j.cypher.recipes.refactoring.Migration;
+import org.neo4j.cypher.utilities.Migration;
+import org.neo4j.graphdb.GraphDatabaseService;
 
 public class ExtractNodeFromRelationship implements Migration
 {
     private static final int BATCH_SIZE = 2;
-    private final ExecutionEngine executionEngine;
 
-    public ExtractNodeFromRelationship( ExecutionEngine executionEngine )
+    @Override
+    public void apply( GraphDatabaseService db )
     {
-        this.executionEngine = executionEngine;
-    }
+        ExecutionEngine executionEngine = new ExecutionEngine( db );
 
-    public void apply()
-    {
-        Map<String, Object> params = new HashMap<>(  );
+        Map<String, Object> params = new HashMap<>();
         params.put( "batchSize", BATCH_SIZE );
 
-        long numberRelsDeleted = extractNodesInBatch(params);
+        long numberRelsDeleted = extractNodesInBatch( executionEngine, params );
         while ( numberRelsDeleted > 0L )
         {
-            numberRelsDeleted = extractNodesInBatch(params);
+            numberRelsDeleted = extractNodesInBatch( executionEngine, params );
         }
 
-        long numberRIDsRemoved = removeRIDsInBatch(params);
+        long numberRIDsRemoved = removeRIDsInBatch( executionEngine, params );
         while ( numberRIDsRemoved > 0L )
         {
-            numberRIDsRemoved = removeRIDsInBatch(params);
+            numberRIDsRemoved = removeRIDsInBatch( executionEngine, params );
         }
     }
 
-    private long removeRIDsInBatch(Map<String, Object> params)
+    private long removeRIDsInBatch( ExecutionEngine executionEngine, Map<String, Object> params )
     {
         String cypher = "MATCH (n:Email)\n" +
                 "WHERE has(n._rid)\n" +
@@ -46,7 +44,7 @@ public class ExtractNodeFromRelationship implements Migration
         return (long) result.iterator().next().get( "numberRemoved" );
     }
 
-    private long extractNodesInBatch(Map<String, Object> params)
+    private long extractNodesInBatch( ExecutionEngine executionEngine, Map<String, Object> params )
     {
         String cypher = "MATCH (a:User)-[r:EMAILED]->(b:User)\n" +
                 "WITH a, r, b LIMIT {batchSize}\n" +
